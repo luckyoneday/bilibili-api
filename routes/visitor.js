@@ -1,5 +1,5 @@
 const Router = require('koa-router')
-const VisitorModel = require('../models')
+const { VisitorModel } = require('../models')
 
 const visitor = new Router()
 
