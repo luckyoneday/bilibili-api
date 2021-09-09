@@ -1,21 +1,22 @@
 const axios = require('axios')
+const qs = require('Qs')
 
-const chooseUserAgent = (ua = false) => {
+const chooseUserAgent = (ua = 'web') => {
   const userAgentList = {
-    mobile: 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1',
-    pc: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.30 Safari/537.36',
+    mobile:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1',
+    web: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.30 Safari/537.36',
   }
-  const tempUA  = ua ? ua  : 'pc'
+  const tempUA = ua ? ua : 'web'
   return userAgentList[tempUA]
 }
 
 const createRequest = (method, url, data, options) => {
   return new Promise((resolve, reject) => {
     let headers = {
-      ['User-Agent']: chooseUserAgent[options.ua],
+      ['User-Agent']: chooseUserAgent(options.ua),
       Referer: 'https://www.bilibili.com/',
       Origin: 'https://www.bilibili.com/',
-      type: 'json',
     }
     if (method.toUpperCase() === 'POST') {
       headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -34,22 +35,33 @@ const createRequest = (method, url, data, options) => {
     }
 
     let settings = {
-        method,
-        headers,
-      }
+      method,
+      headers,
+    }
     if (method.toUpperCase() === 'GET') {
       const tempQuery = Object.keys(data).reduce((prev, cur, idx) => {
         if (idx === 0) {
-          return prev + cur + '=' + data[cur]
-        } else return prev + '&' + cur + '=' + data[cur]
+          return (
+            prev + encodeURIComponent(cur) + '=' + encodeURIComponent(data[cur])
+          )
+        } else
+          return (
+            prev +
+            '&' +
+            encodeURIComponent(cur) +
+            '=' +
+            encodeURIComponent(data[cur])
+          )
       }, '?')
 
       const newUrl = url + tempQuery
       settings.url = newUrl
     } else {
       settings.url = url
-      settings.data = data
+      settings.data = qs.stringify(data)
     }
+
+    console.log(settings, 'request')
 
     axios
       .request(settings)

@@ -3,6 +3,7 @@ const { VisitorModel } = require('../models')
 
 const visitor = new Router()
 
+// prefix: '/visit'
 visitor.get('/getList', VisitorModel.getList)
 
 module.exports = visitor

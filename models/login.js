@@ -6,8 +6,8 @@ class LoginModel {
   static getPassportCaptcha(ctx) {
     return request(
       'GET',
-      VALIDATE_HOST + '/web/captcha/combine',
-      { plat: 6 },
+      VALIDATE_HOST + '/x/passport-login/captcha',
+      { source: 'main_web' },
       {},
     ).then((res) => {
       ctx.body = res
@@ -16,13 +16,14 @@ class LoginModel {
 
   static getPassportKey(ctx) {
     const query = ctx.query
-    const platform = query.platform || 'pc'
-    // pc 端
-    if (platform === 'pc') {
+    const platform = query.platform || 'web'
+
+    // web 端
+    if (platform === 'web') {
       return request(
         'GET',
-        VALIDATE_HOST + '/login',
-        { act: 'getKey' },
+        VALIDATE_HOST + '/x/passport-login/web/key',
+        { r: Math.random() },
         {},
       ).then((res) => {
         ctx.body = res
@@ -48,19 +49,28 @@ class LoginModel {
   }
 
   static login(ctx) {
-    const { username, password, key, challenge, validate, seccode } =
+    const { username, password, token, challenge, validate, seccode, source, go_url } =
       ctx.request.body
 
-    return request('POST', VALIDATE_HOST + '/web/login/v2', {
-      captchaType: 6,
-      username,
-      password,
-      keep: true,
-      key,
-      challenge,
-      validate,
-      seccode,
-    }).then((res) => {
+    return request(
+      'POST',
+      VALIDATE_HOST + '/x/passport-login/web/login',
+      {
+        source,
+        go_url,
+        keep: true,
+        username,
+        password,
+        token,
+        challenge,
+        validate,
+        seccode,
+      },
+      {
+        Origin: 'https://passport.bilibili.com',
+        Referer: 'https://passport.bilibili.com',
+      },
+    ).then((res) => {
       ctx.body = res
     })
   }

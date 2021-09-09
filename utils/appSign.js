@@ -1,5 +1,4 @@
 const Crypto = require('crypto')
-const { Buffer } = require('buffer')
 
 const getSignParams = (data, key = '') => {
 
@@ -21,11 +20,5 @@ const getSignParams = (data, key = '') => {
   return signedHash.digest('hex')
 }
 
-const encryptoSign = (publicKey, value) => {
-  const bufferV = Buffer.from(value, 'utf8')
-  const tempV = Crypto.publicEncrypt(publicKey, bufferV)
-  return tempV.toString('base64')
-}
-
-module.exports = { getSignParams, encryptoSign }
+module.exports = { getSignParams }
 
