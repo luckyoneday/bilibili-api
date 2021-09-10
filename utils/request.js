@@ -34,11 +34,9 @@ const createRequest = (method, url, data, options) => {
       headers['Cookie'] = options.cookie
     }
 
-    let settings = {
-      method,
-      headers,
-    }
-    if (method.toUpperCase() === 'GET') {
+    let settings = { method, headers }
+    
+    if (method.toUpperCase() === 'GET' && data && typeof data === 'object') {
       const tempQuery = Object.keys(data).reduce((prev, cur, idx) => {
         if (idx === 0) {
           return (
@@ -66,8 +64,14 @@ const createRequest = (method, url, data, options) => {
     axios
       .request(settings)
       .then((res) => {
-        console.log('res,', res.data)
-        resolve(res.data)
+        const cookies = res.headers['set-cookie'] || []
+        res.headers = {
+          ...res.headers,
+          ['set-cookie']: cookies.map((x) =>
+            x.replace(/\s*Domain=[^(;|$)]+;*/, ''),
+          ),
+        }
+        resolve(res)
       })
       .catch(reject)
   })

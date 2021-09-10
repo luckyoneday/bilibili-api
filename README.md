@@ -1,6 +1,6 @@
 # bilibili nodejs api
 
-参考 [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
+灵感来自 [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)，参考 [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
 
 ## 当前功能
 
@@ -23,5 +23,12 @@
 <summary> 2、 登录</summary>
 
 [登录相关接口和步骤](./notes/login.md)
+
+</details>
+
+<details>
+<summary> 3、 用户信息</summary>
+
+[用户信息](./notes/userinfo.md)
 
 </details>

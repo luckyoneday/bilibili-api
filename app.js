@@ -12,12 +12,12 @@ const routes = new router()
 
 routes.use('/visit', visitor.routes(), visitor.allowedMethods())
 routes.use('/x/passport-login', login.routes(), login.allowedMethods())
-routes.use('/', authorized.routes(), authorized.allowedMethods())
+routes.use('/x/web-interface', authorized.routes(), authorized.allowedMethods())
 app.use(routes.routes(), routes.allowedMethods())
 
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localgost:4030',
     credentials: true,
     allowMethods: ['GET', 'POST', 'DELETE'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],

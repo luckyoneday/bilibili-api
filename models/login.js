@@ -10,7 +10,7 @@ class LoginModel {
       { source: 'main_web' },
       {},
     ).then((res) => {
-      ctx.body = res
+      ctx.body = res.data
     })
   }
 
@@ -26,7 +26,7 @@ class LoginModel {
         { r: Math.random() },
         {},
       ).then((res) => {
-        ctx.body = res
+        ctx.body = res.data
       })
     }
 
@@ -43,7 +43,7 @@ class LoginModel {
         },
         {},
       ).then((res) => {
-        ctx.body = res
+        ctx.body = res.data
       })
     }
   }
@@ -71,7 +71,10 @@ class LoginModel {
         Referer: 'https://passport.bilibili.com',
       },
     ).then((res) => {
-      ctx.body = res
+      for(let key in res.headers) {
+        ctx.set(key, res.headers[key])
+      }
+      ctx.body = res.data
     })
   }
 }

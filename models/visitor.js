@@ -11,7 +11,7 @@ class VisitorModel {
       { platform },
       {},
     ).then((res) => {
-      ctx.body = res
+      ctx.body = res.data
     })
   }
 }
